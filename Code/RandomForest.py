@@ -9,7 +9,7 @@ from sklearn import preprocessing, metrics
 from sklearn.metrics import roc_curve, roc_auc_score, classification_report, confusion_matrix
 import matplotlib.pyplot as plt
 
-features = pd.read_csv('D:/File_X/Help/hsu/sig_var.csv')
+features = pd.read_csv('sig_var.csv')
 features.head(5)
 
 # 探索資料
