@@ -1,9 +1,4 @@
 # -*- coding: utf-8 -*-
-"""
-Created on Sat Apr 23 20:08:40 2022
-
-@author: Lin
-"""
 
 import pandas as pd
 import numpy as np
@@ -19,11 +14,11 @@ from keras.utils.np_utils import to_categorical
 from keras.optimizers import Adam, SGD
 from sklearn.model_selection import train_test_split
 
-#data
-features = pd.read_csv('D:/File_X/Help/hsu/sig_var.csv')
+# Read data
+features = pd.read_csv('sig_var.csv')
 features.head(5)
 
-# 探索資料
+# Checking data
 print('The shape of our features is:', features.shape)
 features.describe()
 features.head()
@@ -31,7 +26,7 @@ features.head()
 # checking null
 print(features.isnull().sum())
 
-# 特徵轉換
+# Labeling, featuring
 labels = np.array(features['ADL-group'])
 # Remove the labels from the features
 # axis 1 refers to the columns
@@ -42,7 +37,7 @@ feature_list = list(features.columns)
 # Convert to numpy array
 features = np.array(features)
 
-#train 0.7, test 0.3
+# train 0.7, test 0.3
 train_features, test_features, train_labels, test_labels = train_test_split(features, labels, test_size = 0.3)
 print('Training Features Shape:', train_features.shape)
 print('Training Labels Shape:', train_labels.shape)
