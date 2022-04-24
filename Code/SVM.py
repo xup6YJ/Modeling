@@ -1,9 +1,5 @@
 # -*- coding: utf-8 -*-
-"""
-Created on Sun Apr 24 16:35:41 2022
 
-@author: Lin
-"""
 import pandas as pd
 import numpy as np
 import seaborn as sns
