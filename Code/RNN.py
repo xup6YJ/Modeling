@@ -2,7 +2,7 @@
 
 import pandas as pd
 import numpy as np
-
+import Evaluation as eva
 import tensorflow as tf
 import tensorflow.keras as keras
 from tensorflow.keras.models import Sequential
@@ -47,11 +47,11 @@ history  = model.fit(rnn_train_features,
                      epochs = 20, batch_size = 16)
 
 # main
-pred_result = ROC_plot(label = test_labels, prediction = prediction, title= 'RNN', path = 'RNN.JPEG')
+pred_result = eva.ROC_plot(label = test_labels, prediction = prediction, title= 'RNN', path = 'RNN.JPEG')
 
 table = confusion_matrix(test_labels, pred_result)
-table_df = result_original_matrix(table)
+table_df = eva.result_original_matrix(table)
 table_df
     
-path = 'DNN_result.csv'
+path = 'RNN_result.csv'
 table_df.to_csv(path, index = False)
