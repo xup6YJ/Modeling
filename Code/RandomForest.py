@@ -1,9 +1,4 @@
 # -*- coding: utf-8 -*-
-"""
-Created on Sat Apr 23 12:25:58 2022
-
-@author: Lin
-"""
 
 #引入模組與資料
 import pandas as pd
