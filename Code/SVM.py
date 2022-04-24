@@ -7,6 +7,7 @@ import matplotlib.pyplot as plt
 from sklearn.metrics import classification_report, confusion_matrix
 from sklearn.svm import SVC
 from sklearn.model_selection import GridSearchCV
+import Evaluation as eva
 %matplotlib inline
 
 model = SVC(kernel='linear')
@@ -44,71 +45,11 @@ print(confusion_matrix(y_test,grid_predictions))
 print('\n')
 print(classification_report(y_test,grid_predictions))
 
-#Evaluation
-
-def ROC_plot(label, prediction, title):
-    
-    #Plot
-    fpr, tpr, thresholds = roc_curve(label, prediction)
-    fig, ax1 = plt.subplots(1,1, figsize = (10, 10), dpi = 80)
-    ax1.plot(fpr, tpr, 'b.-', label = 'ADL (AUC:%2.2f)' % roc_auc_score(label, prediction))
-    ax1.legend(loc = 4)
-    ax1.set_xlabel('1 - Specificity')
-    ax1.set_ylabel('Sensitivity')
-    plt.title(title)
-    fig.savefig('Random Forest.JPEG')
-    #Threshold
-    i = np.arange(len(tpr)) # index for df
-    roc = pd.DataFrame({'fpr' : pd.Series(fpr, index=i),'tpr' : pd.Series(tpr, index = i), '1-fpr' : pd.Series(1-fpr, index = i), 'tf' : pd.Series(tpr - (1-fpr), index = i), 'thresholds' : pd.Series(thresholds, index = i)})
-    roc.iloc[(roc.tf-0).abs().argsort()[:1]]
-    index = roc.iloc[(roc.tf-0).abs().argsort()[:1]].index
-    thresh = float(thresholds[index])
-    
-    pred_result = np.where(predictions >= thresh, 1, 0)
-    
-    return pred_result
-
-def result_original_matrix(table):
-    
-    tabl2_new = np.zeros((2,2))
-    tabl2_new[0, 0] = int(table[1, 1])
-    tabl2_new[1, 1] = int(table[0, 0])
-    tabl2_new[1, 0] = int(table[1, 0]) #original False Negative
-    tabl2_new[0, 1] = int(table[0, 1]) #original False Positive
-
-    bot = ['True Positive', 'True Negative']
-    left = ['Model Positive', 'Model Negative']
-
-    df_cm = pd.DataFrame(tabl2_new, 
-                         index = [i for i in left],
-                         columns = [i for i in bot])
-    
-    result_df = pd.DataFrame(columns=['TP', 'FP', 'FN', 'TN', 'Sensitivity', 'Specificity', 'PPV', 'NPV', 
-                                      'Accuracy','F1Score', 'AUC'])
-    result_df.TP = pd.Series(int(tabl2_new[0,0]))
-    result_df.FP = pd.Series(int(tabl2_new[0,1]))
-    result_df.TN = pd.Series(int(tabl2_new[1,1]))
-    result_df.FN = pd.Series(int(tabl2_new[1,0]))
-    
-    #Recall
-    sen = tabl2_new[0, 0]/(tabl2_new[0, 0] + tabl2_new[1, 0])
-    result_df.Sensitivity = sen
-    result_df.Specificity = tabl2_new[1, 1]/(tabl2_new[0, 1] + tabl2_new[1, 1])
-    
-    #Precision
-    ppv = tabl2_new[0, 0]/(tabl2_new[0, 0] + tabl2_new[0, 1])
-    result_df.PPV = ppv
-    result_df.NPV = tabl2_new[1, 1]/(tabl2_new[1, 1] + tabl2_new[1, 0])
-    result_df.Accuracy = (tabl2_new[0, 0] + tabl2_new[1, 1])/table.sum()
-
-    result_df.F1Score = 2 * (ppv * sen) / (ppv + sen)
-        
-    return result_df
-
-pred_result = ROC_plot(label = test_labels, prediction = predictions, title= 'SVM')
+#Evaluation main
+pred_result = eva.ROC_plot(label = test_labels, prediction = predictions, title= 'SVM')
 
 table = confusion_matrix(test_labels, pred_result)
-table_df = result_original_matrix(table)
+table_df = eva.result_original_matrix(table)
 table_df
     
 path = 'SVM_result.csv'
