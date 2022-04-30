@@ -1,9 +1,5 @@
 # -*- coding: utf-8 -*-
-"""
-Created on Mon Apr 25 19:17:48 2022
 
-@author: Lin
-"""
 import pandas as pd
 import numpy as np
 import Evaluation as eva
