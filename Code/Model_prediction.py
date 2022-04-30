@@ -130,4 +130,4 @@ ax1.legend(loc = 4)
 ax1.set_xlabel('1 - Specificity')
 ax1.set_ylabel('Sensitivity')
 plt.title('Model Prediction')
-
+fig.savefig(path)
