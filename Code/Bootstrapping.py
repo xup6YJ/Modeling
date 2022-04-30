@@ -1,25 +1,5 @@
 # -*- coding: utf-8 -*-
-"""
-Created on Tue Apr 26 21:40:13 2022
 
-@author: Lin
-"""
-
-
-# -*- coding: utf-8 -*-
-"""
-Created on Mon Apr 25 16:31:41 2022
-
-@author: Lin
-"""
-
-
-# -*- coding: utf-8 -*-
-"""
-Created on Sat Apr 23 20:08:40 2022
-
-@author: Lin
-"""
 
 import pandas as pd
 import numpy as np
