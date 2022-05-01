@@ -7,6 +7,7 @@ Modeling techniques including Machine Learning, Deep Learning
 
 # Multi-model Comparison in ROCurve and Bootstrapping
 Step 1.Basic data feature engineering and spliting data into Train/Test by using ["DataPreprocessing.py"](https://github.com/xup6YJ/Modeling/blob/main/Code/DataPreprocessing.py).
+
 Step 2. ["Model_prediction.py"](https://github.com/xup6YJ/Modeling/blob/main/Code/Model_prediction.py) Different model training and compare the proformance using ROCurve.
 
 <p align="center">
