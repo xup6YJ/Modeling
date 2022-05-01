@@ -25,6 +25,7 @@ import DataPreprocessing as dp
 
 # data
 train_features, train_labels, test_features, test_labels = dp.read_features()
+exv_x, exv_y = dp.read_external_data()
 
 # fit the keras model on the dataset   
 # Rnn feature
