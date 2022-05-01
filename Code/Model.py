@@ -30,7 +30,7 @@ def dnn_model(train_input_shape):
     # model.summary()
 
     model.compile(loss='binary_crossentropy', 
-                  optimizer  = optimizers.Adam (lr = 0.001, name = 'adam'), metrics = ['acc'])
+                  optimizer  = optimizers.Adam (learning_rate = 0.001, name = 'adam'), metrics = ['acc'])
     
     return model
 
@@ -50,7 +50,7 @@ def rnn_model(train_input_shape):
     
     
     model.compile(loss='binary_crossentropy', 
-                  optimizer  = optimizers.Adam (lr = 0.001, name = 'adam'), metrics = ['acc'])
+                  optimizer  = optimizers.Adam (learning_rate = 0.001, name = 'adam'), metrics = ['acc'])
     
     return model
 
