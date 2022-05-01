@@ -59,15 +59,15 @@ def model_prediction(x_test, y_test, model_type):
     elif model_type == 'Random_Forest':
         # Instantiate model with 1000 decision trees, 50 node size
         model = md.rf_model()
-        history = model.fit(train_features, train_labels)
+        history = model.fit(train_features, train_labels.ravel())
     
     elif model_type == 'SVM':
         model = md.svm_model()
-        history = model.fit(train_features,train_labels)
+        history = model.fit(train_features,train_labels.ravel())
         
     elif model_type == 'Logistic':
         model = md.logistic_reg()
-        model.fit(train_features,train_labels)
+        model.fit(train_features,train_labels.ravel())
         
     # prediction
     prediction = model.predict(x_test)
