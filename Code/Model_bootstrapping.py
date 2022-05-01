@@ -32,10 +32,12 @@ rnn_train_features = np.array(train_features)
 rnn_train_features = np.reshape(train_features, (train_features.shape[0], train_features.shape[1], 1))
 rnn_train_features.shape
 
-def bootstrapping_result(iterations, x_test, y_test, model_type):
+def bootstrapping_result(iterations, model_type, x_test = test_features, y_test = test_labels, x_exv = exv_x, y_exv = exv_y):
     
     result_df = pd.DataFrame(columns=['TP', 'FP', 'FN', 'TN', 'Sensitivity', 'Specificity', 'PPV', 'NPV', 
                                       'Accuracy','F1Score', 'AUC'])
+    exv_result_df = pd.DataFrame(columns=['TP', 'FP', 'FN', 'TN', 'Sensitivity', 'Specificity', 'PPV', 'NPV', 
+                                  'Accuracy','F1Score', 'AUC'])
     
     for i in range(iterations):
         if model_type == 'DNN':
@@ -43,30 +45,33 @@ def bootstrapping_result(iterations, x_test, y_test, model_type):
             model = md.dnn_model(train_shape)
             history  = model.fit(train_features, 
                                  train_labels, 
-                                 epochs = 1, batch_size = 16)
+                                 epochs = 1, batch_size = 16)  #paper 70 epoch
             
         elif model_type == 'RNN':
             train_shape = (rnn_train_features.shape[1], rnn_train_features.shape[2])
             model = md.rnn_model(train_shape)
             history  = model.fit(rnn_train_features, 
                                  train_labels, 
-                                 epochs = 1, batch_size = 16)
+                                 epochs = 1, batch_size = 16)  #paper 20 epoch
             
             x_test = np.array(x_test)
             x_test = np.reshape(x_test, (x_test.shape[0], x_test.shape[1], 1))
             
+            x_exv = np.array(x_exv)
+            x_exv = np.reshape(x_exv, (x_exv.shape[0], x_exv.shape[1], 1))
+            
         elif model_type == 'Random_Forest':
             # Instantiate model with 1000 decision trees, 50 node size
             model = md.rf_model()
-            history = model.fit(train_features, train_labels)
+            history = model.fit(train_features, train_labels.ravel())
         
         elif model_type == 'SVM':
             model = md.svm_model()
-            history = model.fit(train_features,train_labels)
+            history = model.fit(train_features, train_labels.ravel())
             
         elif model_type == 'Logistic':
             model = md.logistic_reg()
-            model.fit(train_features,train_labels)
+            model.fit(train_features,train_labels.ravel())
             
         # prediction
         prediction = model.predict(x_test)
@@ -80,35 +85,55 @@ def bootstrapping_result(iterations, x_test, y_test, model_type):
         
         frames = [result_df, table_df]
         result_df = pd.concat(frames)
+        
+        # external prediction
+        prediction = model.predict(x_exv)
+        # print("prediction shape:", prediction.shape)
+        pred_result, auc = eva.ROC_plot(label = y_exv, prediction = prediction, 
+                               title= model_type, save_pic = False, path = str(model_type) + '.JPEG')
+        
+        table = confusion_matrix(y_exv, pred_result)
+        eva_table_df = eva.result_original_matrix(table, auc_score = auc)
+        # table_df
+        
+        frames = [exv_result_df, eva_table_df]
+        exv_result_df = pd.concat(frames)
+        
     
-    return result_df
+    return result_df, exv_result_df
 
+# iteration = 1000
 #Random_Forest Result
-boot_result = bootstrapping_result(iterations = 2, x_test = test_features, y_test = test_labels, model_type = 'Random_Forest')
-boot_result
+boot_result, boot_eva_result = bootstrapping_result(iterations = 2, model_type = 'Random_Forest')
 path = 'Random_Forest_boot_result.csv'
 boot_result.to_csv(path, index = False)
+path = 'Random_Forest_boot_eva_result.csv'
+boot_eva_result.to_csv(path, index = False)
 
 #SVM Result
-boot_result = bootstrapping_result(iterations = 2, x_test = test_features, y_test = test_labels, model_type = 'SVM')
-boot_result
+boot_result, boot_eva_result = bootstrapping_result(iterations = 2, model_type = 'SVM')
 path = 'SVM_boot_result.csv'
 boot_result.to_csv(path, index = False)
+path = 'SVM_boot_eva_result.csv'
+boot_eva_result.to_csv(path, index = False)
 
 #DNN Result
-boot_result = bootstrapping_result(iterations = 2, x_test = test_features, y_test = test_labels, model_type = 'DNN')
-boot_result
+boot_result, boot_eva_result = bootstrapping_result(iterations = 2, model_type = 'DNN')
 path = 'DNN_boot_result.csv'
 boot_result.to_csv(path, index = False)
+path = 'DNN_boot_eva_result.csv'
+boot_eva_result.to_csv(path, index = False)
 
 #RNN Result
-boot_result = bootstrapping_result(iterations = 2, x_test = test_features, y_test = test_labels, model_type = 'RNN')
-boot_result
+boot_result, boot_eva_result = bootstrapping_result(iterations = 2, model_type = 'RNN')
 path = 'RNN_boot_result.csv'
 boot_result.to_csv(path, index = False)
+path = 'RNN_boot_eva_result.csv'
+boot_eva_result.to_csv(path, index = False)
 
 #Logistic Result
-boot_result = bootstrapping_result(iterations = 2, x_test = test_features, y_test = test_labels, model_type = 'Logistic')
-boot_result
+boot_result, boot_eva_result = bootstrapping_result(iterations = 2, model_type = 'Logistic')
 path = 'Logistic_boot_result.csv'
 boot_result.to_csv(path, index = False)
+path = 'Logistic_boot_eva_result.csv'
+boot_eva_result.to_csv(path, index = False)
