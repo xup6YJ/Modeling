@@ -6,12 +6,15 @@ Modeling techniques including Machine Learning, Deep Learning
 - To build different kinds of model in basic, including Random Forest, Logistic Regression, Support Vector Machine, DNN, RNN by using ["Model.py"](https://github.com/xup6YJ/Modeling/blob/main/Code/Model.py).
 
 # Multi-model Comparison in ROCurve and Bootstrapping
-Step 1.Basic data feature engineering and spliting data into Train/Test by using ["DataPreprocessing.py"](https://github.com/xup6YJ/Modeling/blob/main/Code/DataPreprocessing.py).
+Step 1.["DataPreprocessing.py"](https://github.com/xup6YJ/Modeling/blob/main/Code/DataPreprocessing.py).
+Basic data feature engineering and spliting data into Train/Test by using 
 
-Step 2. ["Model_prediction.py"](https://github.com/xup6YJ/Modeling/blob/main/Code/Model_prediction.py) Different model training and compare the proformance using ROCurve.
+Step 2. ["Model_prediction.py"](https://github.com/xup6YJ/Modeling/blob/main/Code/Model_prediction.py)
+Different model training and compare the proformance using ROCurve.
 
 <p align="center">
   <img src="Example Image/ROC.jpg">
 </p>
 
-Step 3. ["Model_bootstrapping.py"](https://github.com/xup6YJ/Modeling/blob/main/Code/Model_bootstrapping.py)For more convincing result to compare those models, we perform bootstrapping to observe the 95%CI of each model result.
+Step 3. ["Model_bootstrapping.py"](https://github.com/xup6YJ/Modeling/blob/main/Code/Model_bootstrapping.py)
+For more convincing result to compare those models, we perform bootstrapping to observe the 95%CI of each model result.
