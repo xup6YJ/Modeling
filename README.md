@@ -12,7 +12,7 @@ Basic data feature engineering and spliting data into Train/Test dataset.
 
 Step 2. ["Model_prediction.py"](https://github.com/xup6YJ/Modeling/blob/main/Code/Model_prediction.py)
 
-Different model training and compare the proformance using ROCurve.
+Different model training and compare the proformance using ROCurve (Example figure as below).
 
 <p align="center">
   <img src="Example Image/ROC.jpg">
