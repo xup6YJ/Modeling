@@ -26,3 +26,6 @@ Different model training and compare the proformance using ROCurve (Example figu
 Step 3. ["Model_bootstrapping.py"](https://github.com/xup6YJ/Modeling/blob/main/Code/Model_bootstrapping.py)
 
 For more convincing result to compare those models, we perform bootstrapping to observe the 95%CI of each model result.
+
+# Model Interpretation
+Utilize ["Feature_importance.py"](https://github.com/xup6YJ/Modeling/blob/main/Code/Feature_importance.py) to know the feature importance while training Deep Learning model.
