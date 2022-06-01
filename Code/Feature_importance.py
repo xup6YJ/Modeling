@@ -9,13 +9,10 @@ import seaborn as sn
 import pandas as pd
 import matplotlib.pyplot as plt
 import numpy as np
+import shap
 
-result = pd.read_csv('result/DNN_result.csv')
-path = 'result/DNN_cm.jpeg'
 
 importance = model.coef_
-
-import shap
 
 # load your data here, e.g. X and y
 # create and fit your model here
