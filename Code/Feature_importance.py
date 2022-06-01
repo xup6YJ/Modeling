@@ -36,7 +36,7 @@ feature_list = list(features.columns)
 def dnn_model():
     
     model = Sequential()
-    model.add(Dense(units=512, activation='relu', input_dim=19))
+    model.add(Dense(units=512, activation='relu', input_dim=19))  #
     model.add(Dense(units=256, activation='relu'))
     model.add(Dropout(0.2))
     model.add(Dense(units=128, activation='relu'))
