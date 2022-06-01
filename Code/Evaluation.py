@@ -70,3 +70,21 @@ def result_original_matrix(table, auc_score):
     result_df.F1Score = 2 * (ppv * sen) / (ppv + sen)
         
     return result_df
+
+def plot_confusion(title, df, path):
+
+    result = df.iloc[:,:4].astype(int)
+    array = np.array(result)
+    array1 = array.reshape((2,2))
+    ind1 = ("ADL Group", 'N ADL Group')
+    ind2 = ("ADL Group", 'N ADL Group')
+    df_cm = pd.DataFrame(array1, index = [i for i in ind2],
+                  columns = [i for i in ind1])
+    
+    fig, ax1 = plt.subplots(1,1, figsize = (10, 9), dpi = 80)
+    sn.heatmap(df_cm, annot=True,cmap="Blues", fmt='g')
+    plt.title(title, fontsize=18)
+    plt.ylabel('Predictions', fontsize=18)
+    plt.xlabel('Actuals', fontsize=18)
+    
+    fig.savefig(path)
