@@ -10,13 +10,6 @@ import pandas as pd
 import matplotlib.pyplot as plt
 import numpy as np
 import shap
-
-
-importance = model.coef_
-
-# load your data here, e.g. X and y
-# create and fit your model here
-
 import tensorflow as tf 
 tf.compat.v1.disable_v2_behavior()
 from tensorflow.keras.wrappers.scikit_learn import KerasClassifier, KerasRegressor
@@ -24,6 +17,7 @@ import seaborn as sn
 import eli5
 from eli5.sklearn import PermutationImportance
 
+# importance = model.coef_
 features = pd.read_csv('2018-2020.csv')  #convert path
 labels = np.array(features['ADL-group'])
 # Remove the labels from the features
