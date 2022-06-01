@@ -28,4 +28,4 @@ Step 3. ["Model_bootstrapping.py"](https://github.com/xup6YJ/Modeling/blob/main/
 For more convincing result to compare those models, we perform bootstrapping to observe the 95%CI of each model result.
 
 # Model Interpretation
-Utilize ["Feature_importance.py"](https://github.com/xup6YJ/Modeling/blob/main/Code/Feature_importance.py) to know the feature importance while training Deep Learning model.
+Utilize ["Feature_importance.py"](https://github.com/xup6YJ/Modeling/blob/main/Code/Feature_importance.py) to know the importance of each features while training Deep Learning model.
