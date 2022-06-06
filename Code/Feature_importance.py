@@ -30,7 +30,7 @@ feature_list = list(features.columns)
 def dnn_model():
     
     model = Sequential()
-    model.add(Dense(units=512, activation='relu', input_dim=19))  #
+    model.add(Dense(units=512, activation='relu', input_dim=20))  #convert to your own input_dim
     model.add(Dense(units=256, activation='relu'))
     model.add(Dropout(0.2))
     model.add(Dense(units=128, activation='relu'))
@@ -46,8 +46,7 @@ def dnn_model():
     
     return model
 
-model = md.dnn_model(train_shape)
-
+model = md.dnn_model()
 
 clf = KerasRegressor(build_fn=dnn_model, epochs=10, batch_size=64)
 clf.fit(features, labels)
@@ -58,3 +57,4 @@ w = eli5.show_weights(perm, feature_names = features.columns.tolist())
 result = pd.read_html(w.data)[0]
 result
 
+# results = permutation_importance(model, X_train, y_train, scoring='neg_mean_squared_error')
