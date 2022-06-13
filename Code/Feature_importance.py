@@ -5,7 +5,6 @@ Created on Mon May 30 15:09:10 2022
 @author: Admin
 """
 
-import seaborn as sn
 import pandas as pd
 import matplotlib.pyplot as plt
 import numpy as np
@@ -46,7 +45,7 @@ def dnn_model():
     
     return model
 
-model = md.dnn_model()
+model = dnn_model()
 
 clf = KerasRegressor(build_fn=dnn_model, epochs=10, batch_size=64)
 clf.fit(features, labels)
