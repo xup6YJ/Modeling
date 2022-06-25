@@ -20,12 +20,13 @@ from sklearn.model_selection import train_test_split
 from sklearn.ensemble import RandomForestRegressor
 from sklearn.svm import SVC
 from sklearn.linear_model import LogisticRegression
+from sklearn.neighbors import KNeighborsClassifier
+from sklearn.naive_bayes import GaussianNB
 
 import Evaluation as eva
 import Model as md
 import DataPreprocessing as dp
 
-# main
 
 # data
 train_features, train_labels, test_features, test_labels = dp.read_features()
@@ -44,14 +45,14 @@ def model_prediction(x_test, y_test, model_type, x_exv = exv_x, y_exv = exv_y):
         model = md.dnn_model(train_shape)
         history  = model.fit(train_features, 
                              train_labels, 
-                             epochs = 1, batch_size = 16)  #70  #can convert 10/20
+                             epochs = 10, batch_size = 16)  #70  #can convert 10/20
         
     elif model_type == 'RNN':
         train_shape = (rnn_train_features.shape[1], rnn_train_features.shape[2])
         model = md.rnn_model(train_shape)
         history  = model.fit(rnn_train_features, 
                              train_labels, 
-                             epochs = 1, batch_size = 16)  #20  #can convert 10/20
+                             epochs = 10, batch_size = 16)  #20  #can convert 10/20
         
         x_test = np.array(x_test)
         x_test = np.reshape(x_test, (x_test.shape[0], x_test.shape[1], 1))
@@ -59,7 +60,7 @@ def model_prediction(x_test, y_test, model_type, x_exv = exv_x, y_exv = exv_y):
         x_exv = np.array(x_exv)
         x_exv = np.reshape(x_exv, (x_exv.shape[0], x_exv.shape[1], 1))
         
-    elif model_type == 'Random_Forest':
+    elif model_type == 'Random Forest':
         # Instantiate model with 1000 decision trees, 50 node size
         model = md.rf_model()
         history = model.fit(train_features, train_labels.ravel())
@@ -71,6 +72,14 @@ def model_prediction(x_test, y_test, model_type, x_exv = exv_x, y_exv = exv_y):
     elif model_type == 'Logistic':
         model = md.logistic_reg()
         model.fit(train_features,train_labels.ravel())
+        
+    elif model_type == 'KNN':
+        model = KNeighborsClassifier(n_neighbors=3)
+        history = model.fit(train_features,train_labels.ravel())
+        
+    elif model_type == 'NBC':
+        model = GaussianNB()
+        history = model.fit(train_features,train_labels.ravel())
         
     # prediction
     prediction = model.predict(x_test)
@@ -90,131 +99,78 @@ def model_prediction(x_test, y_test, model_type, x_exv = exv_x, y_exv = exv_y):
     
     return [prediction, table_df, eva_prediction, eva_table_df]
 
-        
+
+#Main
+all_model_type = ('DNN', 'RNN', 'Random Forest', 'SVM', 'Logistic', 'KNN', 'NBC')
+sel_model_type = ('Random Forest', 'SVM', 'Logistic', 'KNN', 'NBC')
+
+
+def all_result(sel_model_type = sel_model_type):
+
+    all_pred_df = pd.DataFrame(columns=['TP', 'FP', 'FN', 'TN', 'Sensitivity', 'Specificity', 'PPV', 'NPV', 
+                                      'Accuracy','F1Score', 'AUC', 'Group', 'Model_Type'])
     
-#Random_Forest Result
-rf_result = model_prediction(x_test = test_features, y_test = test_labels, model_type = 'Random_Forest')
-path = 'result/Random_Forest_result.csv'
-rf_result[1].to_csv(path, index = False)
-df = rf_result[1].iloc[:,:4]
-path = 'cm/Random_Forest_cm.jpeg'
-eva.plot_confusion('RF Internal Validation', df = df, path = path)
+    all_eva_pred_df = pd.DataFrame(columns=['TP', 'FP', 'FN', 'TN', 'Sensitivity', 'Specificity', 'PPV', 'NPV', 
+                                      'Accuracy','F1Score', 'AUC', 'Group', 'Model_Type'])
+            
+    roc_color = ('blue', 'red', 'green', 'black', 'orange', 'purple', 'yellow')       
+    
+    
+    fig1, ax1 = plt.subplots(1,1, figsize = (5, 5), dpi = 120)
+    plt.title('Internal Validation')
+    
+    fig2, ax2 = plt.subplots(1,1, figsize = (5, 5), dpi = 120)
+    plt.title('External Validation')
+    
+    if len(sel_model_type)>1:
+        
+        for i, mod in enumerate(sel_model_type):
+            if mod in all_model_type:
+                
+                #Result
+                result = model_prediction(x_test = test_features, y_test = test_labels, model_type = mod)
+                df = result[1].iloc[:,:4]
+                path = 'cm/' + mod + '_cm.jpeg'
+                title = mod +' Internal Validation'
+                eva.plot_confusion(title, df = df, path = path)
+        
+                df = result[3].iloc[:,:4]
+                path = 'cm/' + mod + 'eva_cm.jpeg'
+                title = mod +' External Validation'
+                eva.plot_confusion(title, df = df, path = path)
+        
+                result[1]['Group'] = i+1
+                result[3]['Group'] = i+1
+                result[1]['Model_Type'] = mod
+                result[3]['Model_Type'] = mod
+                all_pred_df = pd.concat([result[1], all_pred_df])
+                all_eva_pred_df = pd.concat([result[3], all_eva_pred_df])
+                
+                path = 'result/all_pred_df.csv'
+                all_pred_df.to_csv(path, index = False)
+                path = 'result/all_eva_pred_df.csv'
+                all_eva_pred_df.to_csv(path, index = False)
+                
+                #Internal
+                fpr, tpr, thresholds  = roc_curve(test_labels, result[0])
+                #Plot ROC and Save
+                ax1.plot(fpr, tpr, 'b.-', label = mod + '(AUC:%2.2f)' % roc_auc_score(test_labels, result[0]) , color = roc_color[i])
+        
+                ax1.legend(loc = 4)
+                ax1.set_xlabel('1 - Specificity')
+                ax1.set_ylabel('Sensitivity')
+                
+                #External
+                fpr2, tpr2, thresholds2  = roc_curve(exv_y, result[2])
+                #Plot ROC and Save
+                ax2.plot(fpr2, tpr2, 'b.-', label = mod + '(AUC:%2.2f)' % roc_auc_score(exv_y, result[2]), color = roc_color[i])
+                
+                ax2.legend(loc = 4)
+                ax2.set_xlabel('1 - Specificity')
+                ax2.set_ylabel('Sensitivity')
+        
+        fig1.savefig('result/ROC.jpeg')       
+        fig2.savefig('result/ROC_eva.jpeg')        
 
-path = 'result/Random_Forest_eva_result.csv'
-rf_result[3].to_csv(path, index = False)
-df = rf_result[3].iloc[:,:4]
-path = 'cm/Random_Forest_eva_cm.jpeg'
-eva.plot_confusion('RF External Validation', df = df, path = path)
-
-
-#SVM Result
-svm_result = model_prediction(x_test = test_features, y_test = test_labels, model_type = 'SVM')
-path = 'result/SVM_result.csv'
-svm_result[1].to_csv(path, index = False)
-df = svm_result[1].iloc[:,:4]
-path = 'cm/SVM_cm.jpeg'
-eva.plot_confusion('SVM Internal Validation', df = df, path = path)
-
-path = 'result/SVM_eva_result.csv'
-svm_result[3].to_csv(path, index = False)
-df = svm_result[3].iloc[:,:4]
-path = 'cm/SVM_eva_cm.jpeg'
-eva.plot_confusion('SVM External Validation', df = df, path = path)
-
-#DNN Result
-dnn_result = model_prediction(x_test = test_features, y_test = test_labels, model_type = 'DNN')
-path = 'result/DNN_result.csv'
-dnn_result[1].to_csv(path, index = False)
-df = dnn_result[1].iloc[:,:4]
-path = 'cm/DNN_cm.jpeg'
-eva.plot_confusion('DNN Internal Validation', df = df, path = path)
-
-path = 'result/DNN_eva_result.csv'
-dnn_result[3].to_csv(path, index = False)
-df = dnn_result[3].iloc[:,:4]
-path = 'cm/DNN_eva_cm.jpeg'
-eva.plot_confusion('DNN External Validation', df = df, path = path)
-
-#RNN Result
-rnn_result = model_prediction(x_test = test_features, y_test = test_labels, model_type = 'RNN')
-path = 'result/RNN_result.csv'
-rnn_result[1].to_csv(path, index = False)
-df = rnn_result[1].iloc[:,:4]
-path = 'cm/RNN_cm.jpeg'
-eva.plot_confusion('RNN Internal Validation', df = df, path = path)
-
-path = 'result/RNN_eva_result.csv'
-rnn_result[3].to_csv(path, index = False)
-df = rnn_result[3].iloc[:,:4]
-path = 'cm/RNN_eva_cm.jpeg'
-eva.plot_confusion('RNN External Validation', df = df, path = path)
-
-#Logistic Result
-lg_result = model_prediction(x_test = test_features, y_test = test_labels, model_type = 'Logistic')
-path = 'result/Logistic_result.csv'
-lg_result[1].to_csv(path, index = False)
-df = lg_result[1].iloc[:,:4]
-path = 'cm/Logistic_cm.jpeg'
-eva.plot_confusion('Logistic Internal Validation', df = df, path = path)
-
-path = 'result/Logistic_eva_result.csv'
-lg_result[3].to_csv(path, index = False)
-df = lg_result[3].iloc[:,:4]
-path = 'cm/Logistic_eva_cm.jpeg'
-eva.plot_confusion('Logistic External Validation', df = df, path = path)
-
-#Plot 
-# Random_Forest ROC
-fpr, tpr, thresholds = roc_curve(test_labels, rf_result[0])
-#SVM ROC
-fpr2, tpr2, thresholds2  = roc_curve(test_labels, svm_result[0])
-#DNN ROC
-fpr3, tpr3, thresholds3  = roc_curve(test_labels, dnn_result[0])
-#RNN ROC
-fpr4, tpr4, thresholds4  = roc_curve(test_labels, rnn_result[0])
-#Logistic ROC
-fpr5, tpr5, thresholds5  = roc_curve(test_labels, lg_result[0])
-
-fig, ax1 = plt.subplots(1,1, figsize = (5, 5), dpi = 120)
-
-#Plot ROC and Save
-ax1.plot(fpr, tpr, 'b.-', label = 'Random Forest (AUC:%2.2f)' % roc_auc_score(test_labels, rf_result[0]))
-ax1.plot(fpr2, tpr2, 'b.-', label = 'SVM (AUC:%2.2f)' % roc_auc_score(test_labels, svm_result[0]), color = 'r')
-ax1.plot(fpr3, tpr3, 'b.-', label = 'DNN (AUC:%2.2f)' % roc_auc_score(test_labels, dnn_result[0]), color = 'g')
-ax1.plot(fpr4, tpr4, 'b.-', label = 'RNN (AUC:%2.2f)' % roc_auc_score(test_labels, rnn_result[0]), color = 'black')
-ax1.plot(fpr5, tpr5, 'b.-', label = 'Logistic (AUC:%2.2f)' % roc_auc_score(test_labels, lg_result[0]), color = 'yellow')
-
-ax1.legend(loc = 4)
-ax1.set_xlabel('1 - Specificity')
-ax1.set_ylabel('Sensitivity')
-plt.title('Internal Validation')
-fig.savefig('result/ROC.jpeg')
-
-#Eva Plot
-# Random_Forest ROC
-test_labels = exv_y
-fpr, tpr, thresholds = roc_curve(test_labels, rf_result[2])
-#SVM ROC
-fpr2, tpr2, thresholds2  = roc_curve(test_labels, svm_result[2])
-#DNN ROC
-fpr3, tpr3, thresholds3  = roc_curve(test_labels, dnn_result[2])
-#RNN ROC
-fpr4, tpr4, thresholds4  = roc_curve(test_labels, rnn_result[2])
-#Logistic ROC
-fpr5, tpr5, thresholds5  = roc_curve(test_labels, lg_result[2])
-
-fig, ax1 = plt.subplots(1,1, figsize = (5, 5), dpi = 120)
-
-#Plot ROC and Save
-ax1.plot(fpr, tpr, 'b.-', label = 'Random Forest (AUC:%2.2f)' % roc_auc_score(test_labels, rf_result[2]))
-ax1.plot(fpr2, tpr2, 'b.-', label = 'SVM (AUC:%2.2f)' % roc_auc_score(test_labels, svm_result[2]), color = 'r')
-ax1.plot(fpr3, tpr3, 'b.-', label = 'DNN (AUC:%2.2f)' % roc_auc_score(test_labels, dnn_result[2]), color = 'g')
-ax1.plot(fpr4, tpr4, 'b.-', label = 'RNN (AUC:%2.2f)' % roc_auc_score(test_labels, rnn_result[2]), color = 'black')
-ax1.plot(fpr5, tpr5, 'b.-', label = 'Logistic (AUC:%2.2f)' % roc_auc_score(test_labels, lg_result[2]), color = 'yellow')
-
-ax1.legend(loc = 4)
-ax1.set_xlabel('1 - Specificity')
-ax1.set_ylabel('Sensitivity')
-plt.title('External Validation')
-fig.savefig('result/ROC_eva.jpeg')
+all_result() 
 
