@@ -101,7 +101,10 @@ def model_prediction(x_test, y_test, model_type, x_exv = exv_x, y_exv = exv_y):
 
 
 #Main
+#all of the model type reserved on this code
 all_model_type = ('DNN', 'RNN', 'Random Forest', 'SVM', 'Logistic', 'KNN', 'NBC')
+
+#choose the model you want here
 sel_model_type = ('Random Forest', 'SVM', 'Logistic', 'KNN', 'NBC')
 
 
