@@ -159,14 +159,17 @@ def anova_boot(all_result_df, number_of_model):
            
     for index in indexs:
          
-         #
+         #you should delete or add code lines if your number of models is not 5
+         #EX: you only need DNN, RNN, SVM then you should on reserve x1, x2, x3
+         #delete x4 = pd.to_numeric(all_result_df[index][all_result_df['Group'] == 4]) and x5 = pd.to_numeric(all_result_df[index][all_result_df['Group'] == 5])
+         #change a_result = stats.f_oneway(x1,x2,x3, x4, x5) to a_result = stats.f_oneway(x1,x2,x3)
          x1 = pd.to_numeric(all_result_df[index][all_result_df['Group'] == 1])
          x2 = pd.to_numeric(all_result_df[index][all_result_df['Group'] == 2])
          x3 = pd.to_numeric(all_result_df[index][all_result_df['Group'] == 3])
          x4 = pd.to_numeric(all_result_df[index][all_result_df['Group'] == 4])
          x5 = pd.to_numeric(all_result_df[index][all_result_df['Group'] == 5])
          #
-         a_result = stats.f_oneway(x1,x2,x3, x4, x5)
+         a_result = stats.f_oneway(x1, x2, x3, x4, x5)
          
 
          a_result = round(a_result[1],5)
