@@ -25,12 +25,12 @@ from sklearn.naive_bayes import GaussianNB
 
 import Evaluation as eva
 import Model as md
-import DataPreprocessing as dp
+from DataPreprocessing2 import *
 
 
 # data
-train_features, train_labels, test_features, test_labels = dp.read_features()
-exv_x, exv_y = dp.read_external_data()
+train_features, train_labels, test_features, test_labels = read_features()
+exv_x, exv_y = read_external_data()
 
 # fit the keras model on the dataset   
 # Rnn feature
