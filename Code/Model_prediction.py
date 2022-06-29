@@ -1,9 +1,10 @@
 # -*- coding: utf-8 -*-
 """
-Created on Mon May 30 2022
+Created on Wed Jun 29 18:20:55 2022
 
 @author: Admin
 """
+
 
 import pandas as pd
 import numpy as np
@@ -97,7 +98,15 @@ def model_prediction(x_test, y_test, model_type, x_exv = exv_x, y_exv = exv_y):
     table = confusion_matrix(y_exv, pred_result)
     eva_table_df = eva.result_original_matrix(table, auc_score = auc)
     
-    return [prediction, table_df, eva_prediction, eva_table_df]
+    # train
+    train_prediction = model.predict(train_features)
+    train_pred_result, auc = eva.ROC_plot(label = train_labels, prediction = train_prediction, 
+                                title= model_type, save_pic = False, path = str(model_type) + '.JPEG')
+    
+    table = confusion_matrix(train_labels, train_pred_result)
+    train_table_df = eva.result_original_matrix(table, auc_score = auc)
+    
+    return [prediction, table_df, eva_prediction, eva_table_df, train_prediction, train_table_df]
 
 
 #Main
@@ -105,7 +114,7 @@ def model_prediction(x_test, y_test, model_type, x_exv = exv_x, y_exv = exv_y):
 all_model_type = ('DNN', 'RNN', 'Random Forest', 'SVM', 'Logistic', 'KNN', 'NBC')
 
 #choose the model you want here
-sel_model_type = ('Random Forest', 'SVM', 'Logistic', 'KNN', 'NBC')
+sel_model_type = ('Random Forest', 'SVM', 'Logistic', 'NBC')
 
 
 def all_result(sel_model_type = sel_model_type):
@@ -114,6 +123,9 @@ def all_result(sel_model_type = sel_model_type):
                                       'Accuracy','F1Score', 'AUC', 'Group', 'Model_Type'])
     
     all_eva_pred_df = pd.DataFrame(columns=['TP', 'FP', 'FN', 'TN', 'Sensitivity', 'Specificity', 'PPV', 'NPV', 
+                                      'Accuracy','F1Score', 'AUC', 'Group', 'Model_Type'])
+    
+    all_train_pred_df = pd.DataFrame(columns=['TP', 'FP', 'FN', 'TN', 'Sensitivity', 'Specificity', 'PPV', 'NPV', 
                                       'Accuracy','F1Score', 'AUC', 'Group', 'Model_Type'])
             
     roc_color = ('blue', 'red', 'green', 'black', 'orange', 'purple', 'yellow')       
@@ -124,6 +136,9 @@ def all_result(sel_model_type = sel_model_type):
     
     fig2, ax2 = plt.subplots(1,1, figsize = (5, 5), dpi = 120)
     plt.title('External Validation')
+    
+    fig3, ax3 = plt.subplots(1,1, figsize = (5, 5), dpi = 120)
+    plt.title('Training')
     
     if len(sel_model_type)>1:
         
@@ -141,18 +156,29 @@ def all_result(sel_model_type = sel_model_type):
                 path = 'cm/' + mod + 'eva_cm.jpeg'
                 title = mod +' External Validation'
                 eva.plot_confusion(title, df = df, path = path)
+                
+                df = result[5].iloc[:,:4]
+                path = 'cm/' + mod + 'train_cm.jpeg'
+                title = mod +' Training'
+                eva.plot_confusion(title, df = df, path = path)
         
                 result[1]['Group'] = i+1
                 result[3]['Group'] = i+1
+                result[5]['Group'] = i+1
                 result[1]['Model_Type'] = mod
                 result[3]['Model_Type'] = mod
+                result[5]['Model_Type'] = mod
+                
                 all_pred_df = pd.concat([result[1], all_pred_df])
                 all_eva_pred_df = pd.concat([result[3], all_eva_pred_df])
+                all_train_pred_df = pd.concat([result[5], all_train_pred_df])
                 
                 path = 'result/all_pred_df.csv'
                 all_pred_df.to_csv(path, index = False)
                 path = 'result/all_eva_pred_df.csv'
                 all_eva_pred_df.to_csv(path, index = False)
+                path = 'result/all_train_pred_df.csv'
+                all_train_pred_df.to_csv(path, index = False)
                 
                 #Internal
                 fpr, tpr, thresholds  = roc_curve(test_labels, result[0])
@@ -171,9 +197,19 @@ def all_result(sel_model_type = sel_model_type):
                 ax2.legend(loc = 4)
                 ax2.set_xlabel('1 - Specificity')
                 ax2.set_ylabel('Sensitivity')
+                
+                #Train
+                fpr3, tpr3, thresholds3  = roc_curve(train_labels, result[4])
+                #Plot ROC and Save
+                ax3.plot(fpr, tpr, 'b.-', label = mod + '(AUC:%2.2f)' % roc_auc_score(train_labels, result[4]) , color = roc_color[i])
+        
+                ax3.legend(loc = 4)
+                ax3.set_xlabel('1 - Specificity')
+                ax3.set_ylabel('Sensitivity')
         
         fig1.savefig('result/ROC.jpeg')       
-        fig2.savefig('result/ROC_eva.jpeg')        
+        fig2.savefig('result/ROC_eva.jpeg')    
+        fig3.savefig('result/ROC_train.jpeg')   
 
 all_result() 
 
