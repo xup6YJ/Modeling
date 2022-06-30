@@ -5,12 +5,6 @@ Created on Wed Jun 29 16:15:37 2022
 @author: Admin
 """
 
-# -*- coding: utf-8 -*-
-"""
-Spyder Editor
-
-This is a temporary script file.
-"""
 import pandas as pd
 import numpy as np
 from sklearn.model_selection import train_test_split
@@ -40,7 +34,7 @@ def clean_data():
 features = pd.read_csv('IPTW.csv')
 x, y = clean_data()
 
-#Total ration of training/ Internal validation/ External validation = 70% /15% /15%
+#Total ratio of Training/ Internal validation/ External validation = 70% /15% /15%
 #External
 x_train, eva_x_test, y_train, eva_y_test = train_test_split(x, y, test_size = 0.15, stratify=y)
 
