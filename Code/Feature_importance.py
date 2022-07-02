@@ -1,5 +1,3 @@
-# -*- coding: utf-8 -*-
-
 import pandas as pd
 import matplotlib.pyplot as plt
 import numpy as np
@@ -122,7 +120,8 @@ def model_importance(model_type):
         imps_list = imps.importances_mean
     
         print('------- Result of ', model_type, ' -------')
-        print('Feature importance', list(zip(feature_list, imps_list)))
+        res = sorted(zip(feature_list, imps_list), key = lambda x: x[1])
+        print('------- Feature importance -------\n', str(res))
     
     elif model_type == 'SVM':
         model = md.svm_model()
@@ -132,7 +131,8 @@ def model_importance(model_type):
         imps_list = imps.importances_mean
     
         print('------- Result of ', model_type, ' -------')
-        print('Feature importance', list(zip(feature_list, imps_list)))
+        res = sorted(zip(feature_list, imps_list), key = lambda x: x[1])
+        print('------- Feature importance -------\n', str(res))
         
     elif model_type == 'Logistic':
         model = md.logistic_reg()
@@ -142,7 +142,8 @@ def model_importance(model_type):
         imps_list = imps.importances_mean
     
         print('------- Result of ', model_type, ' -------')
-        print('Feature importance', list(zip(feature_list, imps_list)))
+        res = sorted(zip(feature_list, imps_list), key = lambda x: x[1])
+        print('------- Feature importance -------\n', str(res))
         
     elif model_type == 'KNN':
         model = KNeighborsClassifier(n_neighbors=3)
@@ -152,7 +153,8 @@ def model_importance(model_type):
         imps_list = imps.importances_mean
     
         print('------- Result of ', model_type, ' -------')
-        print('Feature importance', list(zip(feature_list, imps_list)))
+        res = sorted(zip(feature_list, imps_list), key = lambda x: x[1])
+        print('------- Feature importance -------\n', str(res))
         
     elif model_type == 'NBC':
         model = GaussianNB()
@@ -162,7 +164,9 @@ def model_importance(model_type):
         imps_list = imps.importances_mean
     
         print('------- Result of ', model_type, ' -------')
-        print('Feature importance', list(zip(feature_list, imps_list)))
+
+        res = sorted(zip(feature_list, imps_list), key = lambda x: x[1])
+        print('------- Feature importance -------\n', str(res))
 
 
 
