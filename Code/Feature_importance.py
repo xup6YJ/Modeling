@@ -95,6 +95,7 @@ def model_importance(model_type):
         w = eli5.show_weights(perm, feature_names = features.columns.tolist())
 
         result = pd.read_html(w.data)[0]
+        print('------- Result of ', model_type, ' -------')
         print(result)
         
         
@@ -108,6 +109,7 @@ def model_importance(model_type):
         w = eli5.show_weights(perm, feature_names = features.columns.tolist())
         
         result = pd.read_html(w.data)[0]
+        print('------- Result of ', model_type, ' -------')
         print(result)
         
     #ML
