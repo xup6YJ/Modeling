@@ -119,7 +119,7 @@ def model_importance(model_type):
         imps = permutation_importance(model, features, labels)
         imps_list = imps.importances_mean
     
-        print('Result of ', model_type)
+        print('------- Result of ', model_type, ' -------')
         print('Feature importance', list(zip(feature_list, imps_list)))
     
     elif model_type == 'SVM':
@@ -129,7 +129,7 @@ def model_importance(model_type):
         imps = permutation_importance(model, features, labels)
         imps_list = imps.importances_mean
     
-        print('Result of ', model_type)
+        print('------- Result of ', model_type, ' -------')
         print('Feature importance', list(zip(feature_list, imps_list)))
         
     elif model_type == 'Logistic':
@@ -139,7 +139,7 @@ def model_importance(model_type):
         imps = permutation_importance(model, features, labels)
         imps_list = imps.importances_mean
     
-        print('Result of ', model_type)
+        print('------- Result of ', model_type, ' -------')
         print('Feature importance', list(zip(feature_list, imps_list)))
         
     elif model_type == 'KNN':
@@ -149,7 +149,7 @@ def model_importance(model_type):
         imps = permutation_importance(model, features, labels)
         imps_list = imps.importances_mean
     
-        print('Result of ', model_type)
+        print('------- Result of ', model_type, ' -------')
         print('Feature importance', list(zip(feature_list, imps_list)))
         
     elif model_type == 'NBC':
