@@ -12,6 +12,10 @@ import shap
 import tensorflow as tf 
 tf.compat.v1.disable_v2_behavior()
 from tensorflow.keras.wrappers.scikit_learn import KerasClassifier, KerasRegressor
+from tensorflow.keras.models import Sequential
+from tensorflow.keras.layers import InputLayer, Dense, Dropout, SimpleRNN
+from tensorflow.keras import models, layers, optimizers
+from keras.optimizers import Adam, SGD
 import seaborn as sn
 import eli5
 from eli5.sklearn import PermutationImportance
