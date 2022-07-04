@@ -25,19 +25,13 @@ import Evaluation as eva
 import Model as md
 from DataPreprocessing2 import *
 
-# main
 
 # data
 data = dat('internal.csv')  #internal data
-
-# main
-
-# data
-
 exv_x, exv_y = read_external_data()
 
 #iteration = 1000
-def bootstrapping(model_type, x_exv = exv_x, y_exv = exv_y, iterations = 2):
+def bootstrapping(model_type, x_exv = exv_x, y_exv = exv_y, iterations = 2):  #convert to 1000
     
     result_df = pd.DataFrame(columns=['TP', 'FP', 'FN', 'TN', 'Sensitivity', 'Specificity', 'PPV', 'NPV', 
                                       'Accuracy','F1Score', 'AUC'])
@@ -46,6 +40,7 @@ def bootstrapping(model_type, x_exv = exv_x, y_exv = exv_y, iterations = 2):
     
     for i in range(iterations):
         
+        print('---------- ', model_type, ' ----------')
         print('No. ', i, ' iteration')
         
         #data shuffling
