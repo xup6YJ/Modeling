@@ -192,12 +192,11 @@ def anova_boot(all_result_df, number_of_model):
     return anova_df
 
 #Main
-
-#all of the model type reserved on this code
+#all of the support model types on this code
 all_model_type = ('DNN', 'RNN', 'Random Forest', 'SVM', 'Logistic', 'KNN', 'NBC')
 
-#choose the model you want here
-sel_model_type = ('Random Forest', 'SVM', 'Logistic', 'KNN', 'NBC')
+#choose the models you want here (need >1)
+sel_model_type = ('Random Forest', 'SVM', 'Logistic', 'NBC')
 
 def boot_result(sel_model_type = sel_model_type):
 
