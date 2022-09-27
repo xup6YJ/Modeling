@@ -20,15 +20,15 @@ class dat:
     def __init__(self, path):
         
         self.path = path
-        self.features = pd.read_csv(self.path)  #convert path
+        self.features = pd.read_csv(self.path)  #modify path
         self.x, self.y = self.clean_data()
               
     def clean_data(self):
         # featuring
-        labels = np.array(self.features['ADL-group'])   #convert to your y column name
+        labels = np.array(self.features['ADL-group'])   #modify to your y column name
         # Remove the labels from the features
         # axis 1 refers to the columns
-        data= self.features.drop('ADL-group', axis = 1)  #convert to your y column name
+        data= self.features.drop('ADL-group', axis = 1)  #modify to your y column name
         data= data.drop('ID', axis = 1)
         # Saving feature names for later use
         feature_list = list(data.columns)
