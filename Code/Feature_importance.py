@@ -23,9 +23,9 @@ features = pd.read_csv('IPTW.csv')
 
 
 # ID,age,sex,BMI,edu,marriage,Caregiver,smoking,drinking,CCI,inADL,GDS5,walk,stratify,cam,BradenScale,EQ5D,tube,urinary,days,readmission,PRE_1,weight
-labels = np.array(features['readmission'])   #convert to your y column name
+labels = np.array(features['readmission'])   #modify to your y column name
 
-features= features.drop('readmission', axis = 1)  #convert to your y column name
+features= features.drop('readmission', axis = 1)  #modify to your y column name
 features= features.drop('ID', axis = 1)
 features= features.drop('weight', axis = 1)
 features= features.drop('PRE_1', axis = 1)
@@ -36,7 +36,7 @@ feature_list = list(features.columns)
 def dnn_model():
     
     model = Sequential()
-    model.add(Dense(units=512, activation='relu', input_dim=len(feature_list)))  #convert to your own input_dim
+    model.add(Dense(units=512, activation='relu', input_dim=len(feature_list)))  #modify to your own input_dim
     model.add(Dense(units=256, activation='relu'))
     model.add(Dropout(0.2))
     model.add(Dense(units=128, activation='relu'))
