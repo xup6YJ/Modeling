@@ -46,14 +46,14 @@ def model_prediction(x_test, y_test, model_type, x_exv = exv_x, y_exv = exv_y):
         model = md.dnn_model(train_shape)
         history  = model.fit(train_features, 
                              train_labels, 
-                             epochs = 10, batch_size = 16)  #70  #can convert 10/20
+                             epochs = 10, batch_size = 16)  #70  #can modify 10/20
         
     elif model_type == 'RNN':
         train_shape = (rnn_train_features.shape[1], rnn_train_features.shape[2])
         model = md.rnn_model(train_shape)
         history  = model.fit(rnn_train_features, 
                              train_labels, 
-                             epochs = 10, batch_size = 16)  #20  #can convert 10/20
+                             epochs = 10, batch_size = 16)  #20  #can modify 10/20
         
         x_test = np.array(x_test)
         x_test = np.reshape(x_test, (x_test.shape[0], x_test.shape[1], 1))
