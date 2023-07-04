@@ -1,5 +1,6 @@
 # Modeling
 This is a modeling and evaluation example for a binary class structure data classification, modeling techniques including Machine Learning and Deep Learning. Bootstrap modeling and Result Plotting functions are included. 
+- A collaboration research using DL and ML with professor Shi in Kaohsiung Medical University
 
 # Universal Function
 - ["Evaluation.py"](https://github.com/xup6YJ/Modeling/blob/main/Code/Evaluation.py) for outputting prediction result including Confusion Matrix, ROCurve, Sensitivity, Specificity, PPV, NPV, F1-Score(used by all of the modeling source code). Plotting confusion matrix on heap map as example below(Function 'plot_confusion').
